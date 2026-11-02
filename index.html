@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>SOMO Walkthrough</title>
+    <link rel="icon" href="data:," />
+    <script type="module" crossorigin src="./assets/index-D5eZAtNf.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-DdULdTTX.css">
+  </head>
+  <body class="intro">
+    <canvas id="view"></canvas>
+
+    <header class="panel title">
+      <div class="name">SOMO Restaurant</div>
+      <div class="times" id="times" role="group" aria-label="Time of day">
+        <button data-time="day" aria-pressed="true">Day</button>
+        <button data-time="dusk" aria-pressed="false">Dusk</button>
+        <button data-time="night" aria-pressed="false">Night</button>
+      </div>
+      <!-- the candy cane: Christmas decorations on and off (C) -->
+      <button class="cane" id="xmasBtn" aria-pressed="false" title="Christmas decorations (C)"><span class="cane-in"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 21.5V8.5a3.75 3.75 0 0 1 7.5 0V10" fill="none" stroke="#fbf3e6" stroke-width="3.6" stroke-linecap="round"/><path d="M9.5 21.5V8.5a3.75 3.75 0 0 1 7.5 0V10" fill="none" stroke="#d9293b" stroke-width="3.6" stroke-dasharray="2.1 2.1"/></svg><span class="cane-label">Christmas</span></span></button>
+    </header>
+
+    <!-- the treasure hunt's tracker: one icon per golden Pour Guy, lit once found -->
+    <div class="panel hunt" id="hunt">
+      <div class="icons" id="huntIcons" aria-hidden="true"></div>
+      <span id="huntCount" aria-live="polite">0 of 3 golden Pour Guys</span>
+      <button id="helpBtn" aria-label="How to play">?</button>
+    </div>
+
+    <nav class="panel spots" id="spots" aria-label="Jump to a spot"></nav>
+
+    <!-- the controls, folded to one button until asked for -->
+    <aside class="panel help" id="help">
+      <div class="help-list" id="helpList">
+        <div><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> or arrow keys: walk</div>
+        <div>Click and drag: look around</div>
+        <div>Hold <kbd>Shift</kbd> or tap Sprint: run</div>
+        <div><kbd>E</kbd> or click a chest: open it</div>
+        <div>Click the map: jump there</div>
+        <div><kbd>T</kbd> day, dusk, night</div>
+        <div><kbd>C</kbd> Christmas decorations</div>
+      </div>
+      <button id="helpToggle" aria-expanded="false" aria-controls="helpList" aria-label="Controls">Controls</button>
+    </aside>
+
+    <!-- phone controls: shown when the device has a touch screen -->
+    <div class="touch-ui">
+      <div class="chips">
+        <button class="panel chip" id="placesBtn" aria-expanded="false">Places</button>
+        <button class="panel chip" id="mapBtn" aria-expanded="false">Map</button>
+        <button class="panel chip" id="timeBtn" aria-label="Time of day: tap to change">Day</button>
+        <button class="panel chip cane" id="xmasChip" aria-pressed="false" aria-label="Christmas decorations"><span class="cane-in"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 21.5V8.5a3.75 3.75 0 0 1 7.5 0V10" fill="none" stroke="#fbf3e6" stroke-width="3.6" stroke-linecap="round"/><path d="M9.5 21.5V8.5a3.75 3.75 0 0 1 7.5 0V10" fill="none" stroke="#d9293b" stroke-width="3.6" stroke-dasharray="2.1 2.1"/></svg></span></button>
+      </div>
+      <div class="stick" id="stick" aria-label="Walk: drag the knob"><div class="knob" id="knob"></div></div>
+      <div class="look-hint" id="lookHint">Drag anywhere to look</div>
+    </div>
+    <button class="panel sprint" id="sprint" aria-pressed="false">Sprint</button>
+    <button class="panel open-btn" id="openBtn">Press E to open the chest</button>
+    <div class="toast" id="toast" role="status"></div>
+
+    <figure class="panel map">
+      <canvas id="map"></canvas>
+      <figcaption id="where">Loading model…</figcaption>
+    </figure>
+
+    <!-- start screen: how to get around, the hunt, and the model loading behind it -->
+    <section class="overlay start" id="start" role="dialog" aria-modal="true" aria-labelledby="startTitle" aria-describedby="best">
+      <div class="card">
+        <h1 id="startTitle">SOMO Restaurant</h1>
+        <p class="sub">Walk the restaurant and the grounds, right in your browser.</p>
+        <!-- the owner's "strong message that it performs best on browser": first thing under the title, a phone version -->
+        <div class="best" id="best">
+          <svg class="best-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4.5h18a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-10a1 1 0 0 1 1-1Zm1 2v8h16v-8Zm4 12.5h8v1.5H8Z"/></svg>
+          <p class="desk"><strong>Built for a desktop browser.</strong> Full graphics and smooth walking, right where you are.</p>
+          <p class="tap"><strong>Best on a computer.</strong> For the full walkthrough, open this page in a desktop browser. On a phone it runs with lighter graphics.</p>
+        </div>
+        <div class="cols">
+          <div class="controls">
+            <h2>Getting around</h2>
+            <ul class="desk">
+              <li><span class="keys"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> or arrows</span><span>walk</span></li>
+              <li><span class="keys">Click and drag</span><span>look around</span></li>
+              <li><span class="keys"><kbd>Shift</kbd> or Sprint</span><span>run</span></li>
+              <li><span class="keys"><kbd>E</kbd> or click a chest</span><span>open it</span></li>
+              <li><span class="keys"><kbd>T</kbd></span><span>day, dusk, night</span></li>
+              <li><span class="keys"><kbd>C</kbd> or the candy cane</span><span>Christmas decorations</span></li>
+              <li><span class="keys">Spot buttons, map</span><span>jump around the site</span></li>
+            </ul>
+            <ul class="tap">
+              <li><span class="keys">Left stick</span><span>walk</span></li>
+              <li><span class="keys">Drag anywhere</span><span>look around</span></li>
+              <li><span class="keys">Sprint</span><span>run</span></li>
+              <li><span class="keys">Open</span><span>shows up at a chest</span></li>
+              <li><span class="keys">Places, Map</span><span>jump around the site</span></li>
+              <li><span class="keys">Day</span><span>day, dusk, night</span></li>
+              <li><span class="keys">Candy cane</span><span>Christmas decorations</span></li>
+            </ul>
+          </div>
+          <div class="quest">
+            <div class="icons" id="startIcons" aria-hidden="true"></div>
+            <h2>Can you collect all 3 golden Pour Guys?</h2>
+            <p>Three treasure chests, not very well hidden. One is inside, two are out on the grounds. Watch for the glint.</p>
+          </div>
+        </div>
+        <div class="card-foot"><button class="go" id="startBtn" disabled>Loading the site…</button></div>
+      </div>
+    </section>
+
+    <!-- all three found -->
+    <section class="overlay finale" id="finale" role="dialog" aria-modal="true" aria-labelledby="finaleTitle" hidden>
+      <div class="card">
+        <div class="icons found" id="finaleIcons" aria-hidden="true"></div>
+        <h1 id="finaleTitle">Congratulations, you're super cool!</h1>
+        <p class="sub">You found all 3 golden Pour Guys.</p>
+        <button class="go" id="finaleBtn">Keep walking</button>
+      </div>
+    </section>
+
+  </body>
+</html>
